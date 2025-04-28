@@ -1,32 +1,52 @@
 package com.javatests.j2ee.javatest;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
-import jakarta.servlet.http.*;
-import java.io.*;
 
-public class ArticleServletTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class ArticleTest {
+
+    private Article article;
+
+    @BeforeEach
+    void setUp() {
+        article = new Article("Produit X", 20.0);
+    }
 
     @Test
-    public void testDoGet() throws Exception {
-        // Création des mocks
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
+    void testArticleCreation() {
+        assertEquals("Produit X", article.getName());
+        assertEquals(20.0, article.getPrice());
+    }
 
-        // Configuration du comportement du mock
-        when(response.getWriter()).thenReturn(writer);
+    @Test
+    void testInvalidArticleCreation() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Article("", 20.0);
+        });
+        assertEquals("Nom ou prix invalide", exception.getMessage());
+        
+        exception = assertThrows(IllegalArgumentException.class, () -> {
+            new Article("Produit Y", -1);
+        });
+        assertEquals("Nom ou prix invalide", exception.getMessage());
+    }
 
-        // Exécution du servlet
-        new ArticleServlet().doGet(request, response);
+    @Test
+    void testUpdatePrice() {
+        assertTrue(article.updatePrice(25.0));
+        assertEquals(25.0, article.getPrice());
 
-        // Vérification du contenu généré
-        writer.flush(); // Assure que tout est écrit dans le StringWriter
-        String output = stringWriter.toString();
-        assert output.contains("<h1>Liste des articles</h1>");
-        assert output.contains("<li>Article 1</li>");
-        assert output.contains("<li>Article 2</li>");
-        assert output.contains("<li>Article 3</li>");
+        assertFalse(article.updatePrice(-5.0));
+    }
+
+    @Test
+    void testUpdateName() {
+        assertTrue(article.updateName("Produit Z"));
+        assertEquals("Produit Z", article.getName());
+
+        assertFalse(article.updateName(""));
+        assertFalse(article.updateName(null));
     }
 }

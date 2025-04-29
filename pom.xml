@@ -10,8 +10,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -60,10 +60,26 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>3.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>runtime</scope>
+        </dependency>
 
     </dependencies>
-
+   
     <build>
         <plugins>
             <plugin>
@@ -71,6 +87,14 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version> <!-- version disponible et stable -->
             </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version> <!-- Version recommandée pour JUnit 5 -->
+            <configuration>
+                <useSystemClassloader>false</useSystemClassloader>
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 
